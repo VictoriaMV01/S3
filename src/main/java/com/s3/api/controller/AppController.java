@@ -1,7 +1,16 @@
 package com.s3.api.controller;
 
 import com.s3.api.service.IS3Service;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.coyote.Response;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("s3")
+@Tag(name = "S3 methods", description = "Controller for S3 API")
 public class AppController {
 
     @Value("${spring.destination.folder}")
@@ -26,6 +36,30 @@ public class AppController {
     IS3Service service;
 
     @PostMapping("/create")
+    @Operation(
+            summary = "Create Bucket",
+            description = "User can create a bucket sending the name",
+            tags = {"Create"},
+           /* requestBody = @RequestBody(
+                    description = "Create nucket request with the bucket name",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json"
+                            //schema = @Schema(implementation = )
+                    )
+            ),*/
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Succsessfully created",
+                            content = @Content(
+                                    mediaType = "application/json"
+                                    //schema = @Schema(implementation = )
+                            )
+                    )
+            }
+
+    )
     public ResponseEntity<String> createBucket(@RequestParam String bucketName){
         return ResponseEntity.ok(service.createBucket(bucketName));
     }
